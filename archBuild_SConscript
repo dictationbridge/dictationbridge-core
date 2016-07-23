@@ -1,0 +1,47 @@
+# Based on the main NVDA helper SCons script
+
+import os
+import shutil
+
+Import(
+	'env',
+)
+
+# We only support compiling with MSVC 14 (2015)
+if not env.get('MSVC_VERSION','').startswith('14.'):
+	raise RuntimeError("Microsoft Visual C++ 14 not found")
+
+
+TARGET_ARCH=env['TARGET_ARCH']
+
+#Some defines and includes for the environment
+env.Append(CPPDEFINES=['UNICODE','_UNICODE','_CRT_SECURE_NO_DEPRECATE'])
+env.Append(CCFLAGS=['/W3','/WX']);
+env.Append(CXXFLAGS=['/EHsc'])
+env.Append(LINKFLAGS=['/incremental:no','/WX'])
+env.Append(LINKFLAGS='/release') #We always want a checksum in the header
+env.Append(MIDLFLAGS='/x64' if TARGET_ARCH=='x86_64' else '/win32')
+
+env.Append(CCFLAGS='/O2')
+env.Append(CCFLAGS='/GL')
+env.Append(LINKFLAGS=['/LTCG'])
+env.Append(CCFLAGS=['/MT'])
+env.Append(CPPDEFINES=['NDEBUG'])
+
+#We always want debug symbols
+env.Append(PDB='${TARGET}.pdb')
+env.Append(LINKFLAGS='/OPT:REF') #having symbols usually turns this off but we have no need for unused symbols
+
+Export('env')
+
+minHookLib=env.SConscript('minhook/SConscript')
+Export('minHookLib')
+
+inprocLib=env.SConscript('inproc/SConscript')
+Export('inprocLib')
+
+loaderProgram=env.SConscript('loader/SConscript')
+Export('loaderProgram')
+
+masterLib=env.SConscript('master/SConscript')
+Export('masterLib')

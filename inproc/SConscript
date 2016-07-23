@@ -1,0 +1,30 @@
+Import([
+	'env',
+	'minHookLib',
+])
+
+env=env.Clone(CPPPATH=[Dir('../common'), Dir('../minhook/upstream/include')])
+
+inprocLib=env.SharedLibrary(
+	target='DictationBridgeInproc64' if env['TARGET_ARCH'] == 'x86_64' else 'DictationBridgeInproc32',
+	source=[
+		'dragon.cpp',
+		'ipc.cpp',
+		'main.cpp',
+		'msctfhooks.c',
+		'msctfhooks_impl.cpp',
+		'userhooks.cpp',
+		'wordhooks.c',
+		'wordhooks_impl.cpp',
+		'inproc.def',
+	],
+	LIBS=[
+		minHookLib,
+		'uuid',
+		'oleacc',
+		'ole32',
+		'user32',
+	],
+)
+
+Return('inprocLib')

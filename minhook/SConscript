@@ -1,0 +1,27 @@
+# Based on the MinHook SCons script from NVDA
+
+Import([
+	'env',
+])
+
+
+minhookPath=Dir('upstream')
+env=env.Clone(CPPPATH=[minhookPath.Dir('include'),minhookPath.Dir('src'),minhookPath.Dir('src/HDE')])
+
+HDESourceFile='HDE/hde64.c' if env['TARGET_ARCH']=='x86_64' else 'HDE/hde32.c'
+
+sourceFiles=[
+	HDESourceFile,
+	'buffer.c',
+	'hook.c',
+	'trampoline.c',
+]
+
+objFiles=[env.Object('_minHook_%s.obj'%x.replace('/','_'),minhookPath.File('src/%s'%x)) for x in sourceFiles]
+
+minHookLib=env.StaticLibrary(
+	target='minHook',
+	source=objFiles,
+)
+
+Return('minHookLib')

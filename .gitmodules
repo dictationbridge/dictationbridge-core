@@ -1,0 +1,3 @@
+[submodule "minhook/upstream"]
+	path = minhook/upstream
+	url = https://github.com/RaMMicHaeL/minhook.git

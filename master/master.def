@@ -1,0 +1,4 @@
+EXPORTS
+DBMaster_SetTextInsertedCallback
+DBMaster_Start
+DBMaster_Stop

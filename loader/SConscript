@@ -1,0 +1,13 @@
+Import('env','inprocLib')
+
+env=env.Clone()
+env.Append(CPPPATH=Dir('../inproc'))
+env.Append(LINKFLAGS='/subsystem:windows')
+
+loaderProgram=env.Program(
+	target='DictationBridgeInprocLoader64' if env['TARGET_ARCH'] == 'x86_64' else 'DictationBridgeInprocLoader32',
+	source=['main.cpp'],
+	LIBS=[inprocLib[2],'user32'],
+)
+
+Return('loaderProgram')
