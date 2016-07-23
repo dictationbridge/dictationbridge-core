@@ -55,46 +55,10 @@ LRESULT WINAPI Detour_SendMessageW(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lP
 	if (HooksActive())
 	{
 		ApiHookBody hb;
-		if ((Msg == WM_CHAR || Msg == WM_KEYDOWN) && IsDragon(_ReturnAddress()))
-			DebugBreak();
 		if ((Msg == EM_REPLACESEL) && IsDragon(_ReturnAddress()))
 		{
 			BeforeSendMessageFromDragon(hWnd, Msg, wParam, lParam);
 		}
 	}
 	return Original_SendMessageW(hWnd, Msg, wParam, lParam);
-}
-
-Tkeybd_event Original_keybd_event = nullptr;
-
-void WINAPI Detour_keybd_event(BYTE bVk, BYTE bScan, DWORD dwFlags, ULONG_PTR dwExtraInfo)
-{
-	ThreadIn ti;
-	if (HooksActive())
-	{
-		ApiHookBody hb;
-		if (IsDragon(_ReturnAddress()))
-		{
-			if (IsDebuggerPresent())
-				DebugBreak();
-		}
-	}
-	Original_keybd_event(bVk, bScan, dwFlags, dwExtraInfo);
-}
-
-TSendInput Original_SendInput = nullptr;
-
-UINT WINAPI Detour_SendInput(UINT cInputs, LPINPUT pInputs, int cbSize)
-{
-	ThreadIn ti;
-	if (HooksActive())
-	{
-		ApiHookBody hb;
-		if (IsDragon(_ReturnAddress()))
-		{
-			if (IsDebuggerPresent())
-				DebugBreak();
-		}
-	}
-	return Original_SendInput(cInputs, pInputs, cbSize);
 }

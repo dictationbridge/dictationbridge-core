@@ -57,8 +57,6 @@ bool ShouldBePresent()
 static HEWK hkUSER32[] =
 {
 	HewkEntry(SendMessageW),
-	HewkEntry(keybd_event),
-	HewkEntry(SendInput),
 	{false, nullptr}
 };
 
