@@ -175,7 +175,7 @@ ULONG Hook(LONG iHookee, HMODULE hHookee)
 	return(Result);
 }
 
-unsigned WINAPI UnhookAndUnload(LPVOID lpv)
+DWORD WINAPI UnhookAndUnload(LPVOID lpv)
 {
 	bool UnloadNow = false;
 
@@ -215,8 +215,7 @@ unsigned WINAPI UnhookAndUnload(LPVOID lpv)
 
 void CreateUUThread()
 {
-	HANDLE hThread =
-		(HANDLE)_beginthreadex(nullptr, 0, UnhookAndUnload, nullptr, 0, nullptr);
+	HANDLE hThread = CreateThread(nullptr, 0, UnhookAndUnload, nullptr, 0, nullptr);
 	if (hThread)
 		CloseHandle(hThread);
 }
