@@ -5,6 +5,7 @@ import shutil
 
 Import(
 	'env',
+	'binDir',
 )
 
 # We only support compiling with MSVC 14 (2015)
@@ -39,9 +40,12 @@ Export('minHookLib')
 
 inprocLib=env.SConscript('inproc/SConscript')
 Export('inprocLib')
+env.Install(binDir,inprocLib)
 
 loaderProgram=env.SConscript('loader/SConscript')
 Export('loaderProgram')
+env.Install(binDir,loaderProgram)
 
 masterLib=env.SConscript('master/SConscript')
 Export('masterLib')
+env.Install(binDir,masterLib)

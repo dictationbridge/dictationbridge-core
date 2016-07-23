@@ -10,6 +10,9 @@ vars = Variables()
 
 env = Environment(variables=vars,HOST_ARCH='x86',tools=[])
 
+binDir = Dir('bin')
+Export('binDir')
+
 archTools=['default','windowsSdk','midl','msrpc']
 env32=env.Clone(TARGET_ARCH='x86',tools=archTools)
 env64=env.Clone(TARGET_ARCH='x86_64',tools=archTools)
@@ -19,5 +22,5 @@ env64['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME'] = 1
 
 env=env32
 
-env32.SConscript('archBuild_SConscript',exports={'env':env32},variant_dir='build/x86')
-env64.SConscript('archBuild_SConscript',exports={'env':env64},variant_dir='build/x86_64')
+env32.SConscript('archBuild_SConscript',exports={'env':env32,'binDir':binDir},variant_dir='build/x86')
+env64.SConscript('archBuild_SConscript',exports={'env':env64,'binDir':binDir},variant_dir='build/x86_64')
