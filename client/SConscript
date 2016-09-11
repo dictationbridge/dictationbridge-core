@@ -1,0 +1,18 @@
+Import([
+	'env',
+])
+
+env=env.Clone(CPPPATH=[Dir('../common')])
+
+clientLib=env.SharedLibrary(
+	target='DictationBridgeClient64' if env['TARGET_ARCH'] == 'x86_64' else 'DictationBridgeClient32',
+	source=[
+		'main.cpp',
+		'client.def',
+	],
+	LIBS=[
+		'user32',
+	],
+)
+
+Return('clientLib')

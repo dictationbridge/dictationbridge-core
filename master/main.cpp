@@ -24,6 +24,7 @@ static HMODULE g_hDll = nullptr;
 static ATOM g_atomClass = 0;
 static HWND g_hwnd = nullptr;
 static TTextInsertedCallback g_TextInsertedCallback = nullptr;
+static TCommandCallback g_CommandCallback = nullptr;
 
 static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -46,6 +47,14 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 				text[cchText] = L'\0';
 				g_TextInsertedCallback(hwnd, startPosition, text);
 				delete[] text;
+			}
+			if (cds.dwData == 1 && g_CommandCallback != nullptr)
+			{
+				char* command = new char[cds.cbData + 1];
+				memcpy(command, data, cds.cbData);
+				command[cds.cbData] = '\0';
+				g_CommandCallback(command);
+				delete[] command;
 			}
 			return 0;
 		}
@@ -106,6 +115,11 @@ static bool StartHelperProcess(LPCTSTR exeName)
 void WINAPI DBMaster_SetTextInsertedCallback(TTextInsertedCallback callback)
 {
 	g_TextInsertedCallback = callback;
+}
+
+void WINAPI DBMaster_SetCommandCallback(TCommandCallback callback)
+{
+	g_CommandCallback = callback;
 }
 
 BOOL WINAPI DBMaster_Start()
