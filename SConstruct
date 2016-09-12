@@ -8,7 +8,10 @@ from glob import glob
 
 vars = Variables()
 
-env = Environment(variables=vars,HOST_ARCH='x86',tools=[])
+env = Environment(variables=vars,HOST_ARCH='x86',
+	tools=[],
+	toolpath = ['site_scons/site_tools']
+)
 
 binDir = Dir('bin')
 Export('binDir')
@@ -22,5 +25,8 @@ env64['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME'] = 1
 
 env=env32
 
-env32.SConscript('archBuild_SConscript',exports={'env':env32,'binDir':binDir},variant_dir='build/x86')
-env64.SConscript('archBuild_SConscript',exports={'env':env64,'binDir':binDir},variant_dir='build/x86_64')
+targets32 = env32.SConscript('archBuild_SConscript',exports={'env':env32,'binDir':binDir},variant_dir='build/x86')
+targets64 = env64.SConscript('archBuild_SConscript',exports={'env':env64,'binDir':binDir},variant_dir='build/x86_64')
+
+#We have to pass the list of targets out so that the NVDA add-on can depend.
+Return('targets32 targets64')
