@@ -54,4 +54,4 @@ clientLib=env.SConscript('client/SConscript')
 Export('clientLib')
 env.Install(binDir,clientLib[0])
 
-Return('minHookLib inprocLib loaderProgram masterLib clientLib')
+Return('inprocLib loaderProgram masterLib clientLib')
