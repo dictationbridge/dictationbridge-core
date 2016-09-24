@@ -40,18 +40,26 @@ Export('minHookLib')
 
 inprocLib=env.SConscript('inproc/SConscript')
 Export('inprocLib')
-env.Install(binDir,inprocLib[0])
+inprocDll=inprocLib[0]
+Export('inprocDll')
+env.Install(binDir,inprocDll)
 
 loaderProgram=env.SConscript('loader/SConscript')
 Export('loaderProgram')
-env.Install(binDir,loaderProgram[0])
+loaderExe=loaderProgram[0]
+Export('loaderExe')
+env.Install(binDir,loaderExe)
 
 masterLib=env.SConscript('master/SConscript')
 Export('masterLib')
-env.Install(binDir,masterLib[0])
+masterDll=masterLib[0]
+Export('masterDll')
+env.Install(binDir,masterDll)
 
 clientLib=env.SConscript('client/SConscript')
 Export('clientLib')
-env.Install(binDir,clientLib[0])
+clientDll=clientLib[0]
+Export('clientDll')
+env.Install(binDir,clientDll)
 
-Return('inprocLib loaderProgram masterLib clientLib')
+Return('inprocDll loaderExe masterDll clientDll')
