@@ -112,6 +112,32 @@ static bool StartHelperProcess(LPCTSTR exeName)
 	return true;
 }
 
+typedef void (WINAPI *TAttach)();
+
+static bool LoadInprocDll(LPCTSTR dllName)
+{
+	TCHAR dllPath[MAX_PATH];
+	GetModuleFileName(g_hDll, dllPath, MAX_PATH);
+	TCHAR* p = _tcsrchr(dllPath, _T('\\'));
+	assert(p);
+	p++;
+	_tcscpy(p, dllName);
+	HMODULE hDll = LoadLibrary(dllPath);
+	if (hDll == nullptr)
+	{
+		return false;
+	}
+	TAttach pAttach = (TAttach) GetProcAddress(hDll, "Attach");
+	if (pAttach == nullptr)
+	{
+		FreeLibrary(hDll);
+		return false;
+	}
+	pAttach();
+	FreeLibrary(hDll);
+	return true;
+}
+
 void WINAPI DBMaster_SetTextInsertedCallback(TTextInsertedCallback callback)
 {
 	g_TextInsertedCallback = callback;
@@ -147,6 +173,11 @@ BOOL WINAPI DBMaster_Start()
 		}
 #ifndef _M_AMD64
 	}
+#endif
+#ifdef _M_AMD64
+	LoadInprocDll(TEXT("DictationBridgeInproc64.dll"));
+#else
+	LoadInprocDll(TEXT("DictationBridgeInproc32.dll"));
 #endif
 	return TRUE;
 }

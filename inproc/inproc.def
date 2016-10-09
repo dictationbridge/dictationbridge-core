@@ -2,3 +2,4 @@ EXPORTS
 WinEventProc
 InstallHooks
 RemoveHooks
+Attach

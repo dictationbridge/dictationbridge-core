@@ -12,6 +12,7 @@
 #include <intrin.h>
 
 #include "dragon.h"
+#include "handle.h"
 #include "hooks.h"
 #include "userhooks.h"
 
@@ -61,4 +62,144 @@ LRESULT WINAPI Detour_SendMessageW(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lP
 		}
 	}
 	return Original_SendMessageW(hWnd, Msg, wParam, lParam);
+}
+
+TSendMessageTimeoutW Original_SendMessageTimeoutW = nullptr;
+
+LRESULT WINAPI Detour_SendMessageTimeoutW(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam, UINT fuFlags, UINT uTimeout, PDWORD_PTR lpdwResult)
+{
+	ThreadIn ti;
+	if (Msg == WM_GETOBJECT && HooksActive())
+	{
+		ApiHookBody hb;
+		TCHAR className[256] = _T("");
+		GetClassName(hWnd, className, ARRAYSIZE(className));
+		if (_tcsicmp(className, _T("ListBox")) == 0)
+		{
+			DWORD pid = 0;
+			GetWindowThreadProcessId(hWnd, &pid);
+			if (pid > 0)
+			{
+				Handle process(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid));
+				if (process)
+				{
+					TCHAR exePath[MAX_PATH];
+					DWORD exePathSize = ARRAYSIZE(exePath);
+					if (QueryFullProcessImageName(process, 0, exePath, &exePathSize))
+					{
+						TCHAR* p = _tcsrchr(exePath, _T('\\'));
+						if (p == nullptr)
+						{
+							p = exePath;
+						}
+						else
+						{
+							p++;
+						}
+						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						{
+							if (lpdwResult != nullptr)
+							{
+								*lpdwResult = 0;
+							}
+							return 0;
+						}
+					}
+				}
+			}
+		}
+	}
+	return Original_SendMessageTimeoutW(hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult);
+}
+
+TGetClassNameW Original_GetClassNameW = nullptr;
+
+int WINAPI Detour_GetClassNameW(HWND hWnd, LPWSTR lpClassName, int nMaxCount)
+{
+	ThreadIn ti;
+	int result = Original_GetClassNameW(hWnd, lpClassName, nMaxCount);
+	if (result > 0 && HooksActive())
+	{
+		ApiHookBody hb;
+		if (_wcsicmp(lpClassName, L"ListBox") == 0)
+		{
+			DWORD pid = 0;
+			GetWindowThreadProcessId(hWnd, &pid);
+			if (pid > 0)
+			{
+				Handle process(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid));
+				if (process)
+				{
+					TCHAR exePath[MAX_PATH];
+					DWORD exePathSize = ARRAYSIZE(exePath);
+					if (QueryFullProcessImageName(process, 0, exePath, &exePathSize))
+					{
+						TCHAR* p = _tcsrchr(exePath, _T('\\'));
+						if (p == nullptr)
+						{
+							p = exePath;
+						}
+						else
+						{
+							p++;
+						}
+						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						{
+							LPCWSTR newName = L"CustomListBox";
+							wcsncpy(lpClassName, newName, nMaxCount);
+							int newNameLen = int(wcslen(newName));
+							return (nMaxCount < newNameLen) ? nMaxCount : newNameLen;
+						}
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
+TRealGetWindowClassW Original_RealGetWindowClassW = nullptr;
+
+UINT WINAPI Detour_RealGetWindowClassW(HWND hWnd, LPWSTR lpClassName, UINT nMaxCount)
+{
+	ThreadIn ti;
+	UINT result = Original_RealGetWindowClassW(hWnd, lpClassName, nMaxCount);
+	if (result > 0 && HooksActive())
+	{
+		ApiHookBody hb;
+		if (_wcsicmp(lpClassName, L"ListBox") == 0)
+		{
+			DWORD pid = 0;
+			GetWindowThreadProcessId(hWnd, &pid);
+			if (pid > 0)
+			{
+				Handle process(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid));
+				if (process)
+				{
+					TCHAR exePath[MAX_PATH];
+					DWORD exePathSize = ARRAYSIZE(exePath);
+					if (QueryFullProcessImageName(process, 0, exePath, &exePathSize))
+					{
+						TCHAR* p = _tcsrchr(exePath, _T('\\'));
+						if (p == nullptr)
+						{
+							p = exePath;
+						}
+						else
+						{
+							p++;
+						}
+						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						{
+							LPCWSTR newName = L"CustomListBox";
+							wcsncpy(lpClassName, newName, nMaxCount);
+							UINT newNameLen = UINT(wcslen(newName));
+							return (nMaxCount < newNameLen) ? nMaxCount : newNameLen;
+						}
+					}
+				}
+			}
+		}
+	}
+	return result;
 }

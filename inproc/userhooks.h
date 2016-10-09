@@ -7,7 +7,16 @@
 #include <windows.h>
 
 typedef LRESULT (WINAPI *TSendMessageW)(HWND, UINT, WPARAM, LPARAM);
+typedef LRESULT (WINAPI *TSendMessageTimeoutW)(HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD_PTR);
+typedef int (WINAPI *TGetClassNameW)(HWND, LPWSTR, int);
+typedef UINT (WINAPI *TRealGetWindowClassW)(HWND, LPWSTR, UINT);
 
 extern TSendMessageW Original_SendMessageW;
+extern TSendMessageTimeoutW Original_SendMessageTimeoutW;
+extern TGetClassNameW Original_GetClassNameW;
+extern TRealGetWindowClassW Original_RealGetWindowClassW;
 
 LRESULT WINAPI Detour_SendMessageW(HWND, UINT, WPARAM, LPARAM);
+LRESULT WINAPI Detour_SendMessageTimeoutW(HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD_PTR);
+int WINAPI Detour_GetClassNameW(HWND, LPWSTR, int);
+UINT WINAPI Detour_RealGetWindowClassW(HWND, LPWSTR, UINT);

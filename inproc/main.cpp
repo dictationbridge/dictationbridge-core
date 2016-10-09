@@ -57,6 +57,9 @@ bool ShouldBePresent()
 static HEWK hkUSER32[] =
 {
 	HewkEntry(SendMessageW),
+	HewkEntry(SendMessageTimeoutW),
+	HewkEntry(GetClassNameW),
+	HewkEntry(RealGetWindowClassW),
 	{false, nullptr}
 };
 
@@ -220,7 +223,7 @@ void CreateUUThread()
 		CloseHandle(hThread);
 }
 
-DWORD Attach()
+extern "C" DWORD WINAPI Attach()
 {
 	DWORD Result = 0x80000000;
 	HooksLock();
