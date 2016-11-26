@@ -25,8 +25,52 @@ static void BeforeSendMessageFromDragon(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 	}
 	if (Msg == EM_REPLACESEL)
 	{
-		LPCWSTR pchText = (LPCWSTR) lParam;
-		DWORD cchText = DWORD(wcslen(pchText));
+		LPWSTR pszText = (LPWSTR) lParam;
+		DWORD cchText = DWORD(wcslen(pszText));
+		if (cchText == 0)
+		{
+			DWORD selStart = 0, selEnd = 0;
+			SendMessage(hWnd, EM_GETSEL, (WPARAM)&selStart, (LPARAM)&selEnd);
+			if (selStart == selEnd)
+			{
+				return;
+			}
+			DWORD cchAllText = (DWORD)(SendMessageW(hWnd, WM_GETTEXTLENGTH, 0, 0));
+			if (cchAllText < selEnd)
+			{
+				return;
+			}
+			LPWSTR pszAllText = new WCHAR[cchAllText + 1];
+			cchAllText = (DWORD)(SendMessageW(hWnd, WM_GETTEXT, cchAllText + 1, (LPARAM) pszAllText));
+			if (cchAllText < selEnd)
+			{
+				delete[] pszAllText;
+				return;
+			}
+			cchText = selEnd - selStart;
+			pszText = new WCHAR[cchText + 1];
+			wcsncpy(pszText, pszAllText + selStart, cchText);
+			pszText[cchText] = L'\0';
+			delete[] pszAllText;
+			DWORD cbData = (sizeof(DWORD) * 3) + (cchText * sizeof(WCHAR));
+			BYTE* data = new BYTE[cbData];
+			DWORD tmp = (DWORD)((__int64)hWnd & 0xffffffff);
+			memcpy(data, &tmp, sizeof(tmp));
+			tmp = (DWORD)selStart;
+			memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
+			tmp = (DWORD)cchText;
+			memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
+			memcpy(data + sizeof(DWORD) * 3, pszText, cchText * sizeof(WCHAR));
+			COPYDATASTRUCT cds;
+			cds.dwData = 2;
+			cds.lpData = (PVOID) data;
+			cds.cbData = cbData;
+			DWORD_PTR result;
+			SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
+			delete[] data;
+			delete[] pszText;
+			return;
+		}
 		DWORD selStart = -1;
 		SendMessage(hWnd, EM_GETSEL, (WPARAM) (&selStart), 0);
 		DWORD cbData = (sizeof(DWORD) * 3) + (cchText * sizeof(WCHAR));
@@ -37,7 +81,7 @@ static void BeforeSendMessageFromDragon(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 		memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
 		tmp = (DWORD)cchText;
 		memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
-		memcpy(data + sizeof(DWORD) * 3, pchText, cchText * sizeof(WCHAR));
+		memcpy(data + sizeof(DWORD) * 3, pszText, cchText * sizeof(WCHAR));
 		COPYDATASTRUCT cds;
 		cds.dwData = 0;
 		cds.lpData = (PVOID) data;

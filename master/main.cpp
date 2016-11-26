@@ -24,6 +24,7 @@ static HMODULE g_hDll = nullptr;
 static ATOM g_atomClass = 0;
 static HWND g_hwnd = nullptr;
 static TTextInsertedCallback g_TextInsertedCallback = nullptr;
+static TTextDeletedCallback g_TextDeletedCallback = nullptr;
 static TCommandCallback g_CommandCallback = nullptr;
 
 static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -46,6 +47,20 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 				memcpy(text, data + textOffset, cchText * sizeof(WCHAR));
 				text[cchText] = L'\0';
 				g_TextInsertedCallback(hwnd, startPosition, text);
+				delete[] text;
+			}
+			if (cds.dwData == 2 && g_TextDeletedCallback != nullptr)
+			{
+				HWND hwnd = nullptr;
+				memcpy(&hwnd, data, sizeof(DWORD));
+				DWORD startPosition = 0;
+				memcpy(&startPosition, data + sizeof(DWORD), sizeof(DWORD));
+				auto textOffset = sizeof(DWORD) * 3;
+				auto cchText = (cds.cbData - textOffset) / sizeof(WCHAR);
+				WCHAR* text = new WCHAR[cchText + 1];
+				memcpy(text, data + textOffset, cchText * sizeof(WCHAR));
+				text[cchText] = L'\0';
+				g_TextDeletedCallback(hwnd, startPosition, text);
 				delete[] text;
 			}
 			if (cds.dwData == 1 && g_CommandCallback != nullptr)
@@ -141,6 +156,11 @@ static bool LoadInprocDll(LPCTSTR dllName)
 void WINAPI DBMaster_SetTextInsertedCallback(TTextInsertedCallback callback)
 {
 	g_TextInsertedCallback = callback;
+}
+
+void WINAPI DBMaster_SetTextDeletedCallback(TTextDeletedCallback callback)
+{
+	g_TextDeletedCallback = callback;
 }
 
 void WINAPI DBMaster_SetCommandCallback(TCommandCallback callback)

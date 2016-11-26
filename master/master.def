@@ -1,5 +1,6 @@
 EXPORTS
 DBMaster_SetTextInsertedCallback
+DBMaster_SetTextDeletedCallback
 DBMaster_SetCommandCallback
 DBMaster_Start
 DBMaster_Stop
