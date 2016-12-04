@@ -33,12 +33,11 @@ HewkDefOriginal(IDispatch_Invoke);
 
 static HRESULT __stdcall Detour_IDispatch_Invoke(IDispatch *This, DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
 {
-	HRESULT hr = Original_IDispatch_Invoke(This, dispidMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
-	if (hr == S_OK && IsDragon(_ReturnAddress()))
+	if (IsDragon(_ReturnAddress()))
 	{
-		WordHooks_PostIDispatchInvoke(This, dispidMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
+		WordHooks_PreIDispatchInvoke(This, dispidMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 	}
-	return hr;
+	return Original_IDispatch_Invoke(This, dispidMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }
 
 HewkDef(IDispatch_Invoke);

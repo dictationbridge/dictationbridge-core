@@ -12,7 +12,7 @@ extern "C" {
 
 void WordHooks_Init(void);
 void WordHooks_HookIDispatchInvoke(IDispatch *disp);
-void WordHooks_PostIDispatchInvoke(IDispatch *This, DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr);
+void WordHooks_PreIDispatchInvoke(IDispatch *This, DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr);
 void WordHooks_Shutdown(void);
 
 #ifdef __cplusplus
