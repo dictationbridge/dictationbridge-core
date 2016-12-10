@@ -30,6 +30,7 @@ void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCook
 	}
 	if (range != nullptr)
 	{
+		MSCTFHooks_HookRange(range);
 		ITfContext* ctx = nullptr;
 		range->GetContext(&ctx);
 		if (ctx != nullptr)
@@ -69,6 +70,58 @@ void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCook
 				view->Release();
 			}
 			ctx->Release();
+		}
+	}
+}
+
+void MSCTFHooks_PreSetText(ITfRange *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cch)
+{
+	ThreadIn ti;
+	if (!HooksActive())
+		return;
+	LastErrorSave les;
+	HookSuspension hs;
+	HWND hwndMaster = FindWindowEx(HWND_MESSAGE, nullptr, TEXT("DictationBridgeMaster"), nullptr);
+	if (hwndMaster == nullptr)
+	{
+		return;
+	}
+	if (cch == 0)
+	{
+		WCHAR pchOrigText[512];
+		ULONG cchOrigText;
+		HRESULT hr = This->GetText(ec, 0, pchOrigText, ARRAYSIZE(pchOrigText), &cchOrigText);
+		if (hr == S_OK && cchOrigText > 0)
+		{
+			HWND hwnd = nullptr;
+			ITfContext* ctx = nullptr;
+			This->GetContext(&ctx);
+			if (ctx != nullptr)
+			{
+				ITfContextView* view = nullptr;
+				ctx->GetActiveView(&view);
+				if (view != nullptr)
+				{
+					view->GetWnd(&hwnd);
+				}
+			}
+			DWORD selStart = -1;
+			DWORD cbData = (sizeof(DWORD) * 3) + (cchOrigText * sizeof(WCHAR));
+			BYTE* data = new BYTE[cbData];
+			DWORD tmp = (DWORD)((__int64)hwnd & 0xffffffff);
+			memcpy(data, &tmp, sizeof(tmp));
+			tmp = (DWORD)selStart;
+			memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
+			tmp = (DWORD)cchOrigText;
+			memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
+			memcpy(data + sizeof(DWORD) * 3, pchOrigText, cchOrigText * sizeof(WCHAR));
+			COPYDATASTRUCT cds;
+			cds.dwData = 2;
+			cds.lpData = (PVOID) data;
+			cds.cbData = cbData;
+			DWORD_PTR result;
+			SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
+			delete[] data;
 		}
 	}
 }

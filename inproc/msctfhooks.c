@@ -45,9 +45,21 @@ static HRESULT __stdcall Detour_ITfInsertAtSelection_InsertTextAtSelection(ITfIn
 
 HewkDef(ITfInsertAtSelection_InsertTextAtSelection);
 
+typedef HRESULT (__stdcall *TITfRange_SetText)(ITfRange *, TfEditCookie, DWORD, const WCHAR *, LONG);
+HewkDefOriginal(ITfRange_SetText);
+
+static HRESULT __stdcall Detour_ITfRange_SetText(ITfRange *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cch)
+{
+	MSCTFHooks_PreSetText(This, ec, dwFlags, pchText, cch);
+	return Original_ITfRange_SetText(This, ec, dwFlags, pchText, cch);
+}
+
+HewkDef(ITfRange_SetText);
+
 static PHEWK g_Hewks[] =
 {
 	&AH_ITfInsertAtSelection_InsertTextAtSelection,
+	&AH_ITfRange_SetText,
 	NULL
 };
 
@@ -142,4 +154,9 @@ void MSCTFHooks_Shutdown(void)
 void MSCTFHooks_HookInsertAtSelection(ITfInsertAtSelection *ias)
 {
 	Hook(&AH_ITfInsertAtSelection_InsertTextAtSelection, ias->lpVtbl->InsertTextAtSelection);
+}
+
+void MSCTFHooks_HookRange(ITfRange *range)
+{
+	Hook(&AH_ITfRange_SetText, range->lpVtbl->SetText);
 }

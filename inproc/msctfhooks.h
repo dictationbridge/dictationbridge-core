@@ -14,6 +14,8 @@ extern "C" {
 void MSCTFHooks_Init(void);
 void MSCTFHooks_HookInsertAtSelection(ITfInsertAtSelection *ias);
 void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cch, ITfRange **ppRange);
+void MSCTFHooks_HookRange(ITfRange *ias);
+void MSCTFHooks_PreSetText(ITfRange *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cch);
 void MSCTFHooks_Shutdown(void);
 
 #ifdef __cplusplus
