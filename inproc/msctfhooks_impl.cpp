@@ -14,6 +14,8 @@
 void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cchText, ITfRange **ppRange)
 {
 	ThreadIn ti;
+	if (cchText <= 0)
+		return;
 	if (!HooksActive())
 		return;
 	LastErrorSave les;
