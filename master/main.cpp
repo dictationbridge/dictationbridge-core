@@ -112,18 +112,22 @@ static bool StartHelperProcess(LPCTSTR exeName)
 	assert(p);
 	p++;
 	_tcscpy(p, exeName);
-	SHELLEXECUTEINFO ei = {sizeof(ei),};
-	ei.fMask = 0;
-	ei.hwnd = nullptr;
-	ei.lpVerb = TEXT("open");
-	ei.lpFile = exePath;
-	ei.lpParameters = nullptr;
-	ei.lpDirectory = nullptr;
-	ei.nShow = SW_SHOW;
-	if (!ShellExecuteEx(&ei))
+	// Explicitly inherit the parent process's privileges, most importantly the uiAccess flag.
+	HANDLE token;
+	if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &token))
 	{
 		return false;
 	}
+	STARTUPINFO si = {sizeof(si),};
+	PROCESS_INFORMATION pi = {nullptr,};
+	if (!CreateProcessAsUser(token, exePath, nullptr, nullptr, nullptr, FALSE, 0, nullptr, nullptr, &si, &pi))
+	{
+		CloseHandle(token);
+		return false;
+	}
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	CloseHandle(token);
 	return true;
 }
 
