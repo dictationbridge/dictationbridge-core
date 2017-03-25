@@ -5,3 +5,5 @@
 #pragma once
 
 bool IsMasterRunning();
+void SendTextInsertedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchText);
+void SendTextDeletedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchText);

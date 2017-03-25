@@ -14,15 +14,11 @@
 #include "dragon.h"
 #include "handle.h"
 #include "hooks.h"
+#include "ipc.h"
 #include "userhooks.h"
 
 static void BeforeSendMessageFromDragon(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	HWND hwndMaster = FindWindowEx(HWND_MESSAGE, nullptr, TEXT("DictationBridgeMaster"), nullptr);
-	if (hwndMaster == nullptr)
-	{
-		return;
-	}
 	if (Msg == EM_REPLACESEL)
 	{
 		LPWSTR pszText = (LPWSTR) lParam;
@@ -52,43 +48,13 @@ static void BeforeSendMessageFromDragon(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 			wcsncpy(pszText, pszAllText + selStart, cchText);
 			pszText[cchText] = L'\0';
 			delete[] pszAllText;
-			DWORD cbData = (sizeof(DWORD) * 3) + (cchText * sizeof(WCHAR));
-			BYTE* data = new BYTE[cbData];
-			DWORD tmp = (DWORD)((__int64)hWnd & 0xffffffff);
-			memcpy(data, &tmp, sizeof(tmp));
-			tmp = (DWORD)selStart;
-			memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
-			tmp = (DWORD)cchText;
-			memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
-			memcpy(data + sizeof(DWORD) * 3, pszText, cchText * sizeof(WCHAR));
-			COPYDATASTRUCT cds;
-			cds.dwData = 2;
-			cds.lpData = (PVOID) data;
-			cds.cbData = cbData;
-			DWORD_PTR result;
-			SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
-			delete[] data;
+			SendTextDeletedEvent(hWnd, selStart, pszText, cchText);
 			delete[] pszText;
 			return;
 		}
 		DWORD selStart = -1;
 		SendMessage(hWnd, EM_GETSEL, (WPARAM) (&selStart), 0);
-		DWORD cbData = (sizeof(DWORD) * 3) + (cchText * sizeof(WCHAR));
-		BYTE* data = new BYTE[cbData];
-		DWORD tmp = (DWORD)((__int64)hWnd & 0xffffffff);
-		memcpy(data, &tmp, sizeof(tmp));
-		tmp = (DWORD)selStart;
-		memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
-		tmp = (DWORD)cchText;
-		memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
-		memcpy(data + sizeof(DWORD) * 3, pszText, cchText * sizeof(WCHAR));
-		COPYDATASTRUCT cds;
-		cds.dwData = 0;
-		cds.lpData = (PVOID) data;
-		cds.cbData = cbData;
-		DWORD_PTR result;
-		SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
-		delete[] data;
+		SendTextInsertedEvent(hWnd, selStart, pszText, cchText);
 	}
 }
 

@@ -9,6 +9,7 @@
 #include <msctf.h>
 
 #include "hooks.h"
+#include "ipc.h"
 #include "msctfhooks.h"
 
 void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCookie ec, DWORD dwFlags, const WCHAR *pchText, LONG cchText, ITfRange **ppRange)
@@ -20,11 +21,6 @@ void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCook
 		return;
 	LastErrorSave les;
 	HookSuspension hs;
-	HWND hwndMaster = FindWindowEx(HWND_MESSAGE, nullptr, TEXT("DictationBridgeMaster"), nullptr);
-	if (hwndMaster == nullptr)
-	{
-		return;
-	}
 	ITfRange* range = nullptr;
 	if (ppRange != nullptr)
 	{
@@ -50,22 +46,7 @@ void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCook
 					LONG acpAnchor = -1, cchRange = -1;
 					if (rangeACP->GetExtent(&acpAnchor, &cchRange) == S_OK)
 					{
-						DWORD cbData = (sizeof(DWORD) * 3) + (cchText * sizeof(WCHAR));
-						BYTE* data = new BYTE[cbData];
-						DWORD tmp = (DWORD)((__int64)hwnd & 0xffffffff);
-						memcpy(data, &tmp, sizeof(tmp));
-						tmp = (DWORD)acpAnchor;
-						memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
-						tmp = (DWORD)cchRange;
-						memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
-						memcpy(data + sizeof(DWORD) * 3, pchText, cchText * sizeof(WCHAR));
-						COPYDATASTRUCT cds;
-						cds.dwData = 0;
-						cds.lpData = (PVOID) data;
-						cds.cbData = cbData;
-						DWORD_PTR result;
-						SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
-						delete[] data;
+						SendTextInsertedEvent(hwnd, acpAnchor, pchText, cchText);
 					}
 					rangeACP->Release();
 				}
@@ -83,11 +64,6 @@ void MSCTFHooks_PreSetText(ITfRange *This, TfEditCookie ec, DWORD dwFlags, const
 		return;
 	LastErrorSave les;
 	HookSuspension hs;
-	HWND hwndMaster = FindWindowEx(HWND_MESSAGE, nullptr, TEXT("DictationBridgeMaster"), nullptr);
-	if (hwndMaster == nullptr)
-	{
-		return;
-	}
 	if (cch == 0)
 	{
 		WCHAR pchOrigText[512];
@@ -107,23 +83,7 @@ void MSCTFHooks_PreSetText(ITfRange *This, TfEditCookie ec, DWORD dwFlags, const
 					view->GetWnd(&hwnd);
 				}
 			}
-			DWORD selStart = -1;
-			DWORD cbData = (sizeof(DWORD) * 3) + (cchOrigText * sizeof(WCHAR));
-			BYTE* data = new BYTE[cbData];
-			DWORD tmp = (DWORD)((__int64)hwnd & 0xffffffff);
-			memcpy(data, &tmp, sizeof(tmp));
-			tmp = (DWORD)selStart;
-			memcpy(data + sizeof(DWORD), &tmp, sizeof(tmp));
-			tmp = (DWORD)cchOrigText;
-			memcpy(data + sizeof(DWORD) * 2, &tmp, sizeof(tmp));
-			memcpy(data + sizeof(DWORD) * 3, pchOrigText, cchOrigText * sizeof(WCHAR));
-			COPYDATASTRUCT cds;
-			cds.dwData = 2;
-			cds.lpData = (PVOID) data;
-			cds.cbData = cbData;
-			DWORD_PTR result;
-			SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
-			delete[] data;
+			SendTextDeletedEvent(hwnd, -1, pchOrigText, cchOrigText);
 		}
 	}
 }

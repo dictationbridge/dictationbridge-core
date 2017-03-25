@@ -39,9 +39,9 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 			{
 				HWND hwnd = nullptr;
 				memcpy(&hwnd, data, sizeof(DWORD));
-				DWORD startPosition = 0;
+				LONG startPosition = 0;
 				memcpy(&startPosition, data + sizeof(DWORD), sizeof(DWORD));
-				auto textOffset = sizeof(DWORD) * 3;
+				auto textOffset = sizeof(DWORD) * 2;
 				auto cchText = (cds.cbData - textOffset) / sizeof(WCHAR);
 				WCHAR* text = new WCHAR[cchText + 1];
 				memcpy(text, data + textOffset, cchText * sizeof(WCHAR));
@@ -53,9 +53,9 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 			{
 				HWND hwnd = nullptr;
 				memcpy(&hwnd, data, sizeof(DWORD));
-				DWORD startPosition = 0;
+				LONG startPosition = 0;
 				memcpy(&startPosition, data + sizeof(DWORD), sizeof(DWORD));
-				auto textOffset = sizeof(DWORD) * 3;
+				auto textOffset = sizeof(DWORD) * 2;
 				auto cchText = (cds.cbData - textOffset) / sizeof(WCHAR);
 				WCHAR* text = new WCHAR[cchText + 1];
 				memcpy(text, data + textOffset, cchText * sizeof(WCHAR));

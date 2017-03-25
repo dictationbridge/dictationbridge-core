@@ -11,8 +11,8 @@ extern "C"
 {
 #endif
 
-typedef void (WINAPI *TTextInsertedCallback)(HWND hwnd, DWORD startPosition, LPCWSTR text);
-typedef void (WINAPI *TTextDeletedCallback)(HWND hwnd, DWORD startPosition, LPCWSTR text);
+typedef void (WINAPI *TTextInsertedCallback)(HWND hwnd, LONG startPosition, LPCWSTR text);
+typedef void (WINAPI *TTextDeletedCallback)(HWND hwnd, LONG startPosition, LPCWSTR text);
 typedef void (WINAPI *TCommandCallback)(LPCSTR command);
 
 void WINAPI DBMaster_SetTextInsertedCallback(TTextInsertedCallback callback);
