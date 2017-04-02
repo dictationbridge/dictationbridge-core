@@ -49,10 +49,10 @@ void WordHooks_PreIDispatchInvoke(IDispatch *This, DISPID dispidMember, REFIID r
 	{
 		g_lastEventWasNewParagraph = false;
 		BSTR bstrText = pDispParams->rgvarg[0].bstrVal;
-		LONG cchText = LONG(wcslen(bstrText));
+		LONG cchText = LONG(SysStringLen(bstrText));
 		LONG selStart = -1;
 		HWND hwnd = GetCurrentWordWindow();
-		if (wcscmp(bstrText, L"") != 0)
+		if (cchText > 0)
 		{
 			SendTextInsertedEvent(hwnd, selStart, bstrText, cchText);
 		}
@@ -78,12 +78,12 @@ void WordHooks_PreIDispatchInvoke(IDispatch *This, DISPID dispidMember, REFIID r
 		{
 			return;
 		}
-		if (*bstrText == L'\0')
+		LONG cchText = LONG(SysStringLen(bstrText));
+		if (cchText == 0)
 		{
 			SysFreeString(bstrText);
 			return;
 		}
-		LONG cchText = LONG(wcslen(bstrText));
 		LONG selStart = -1;
 		HWND hwnd = GetCurrentWordWindow();
 		SendTextDeletedEvent(hwnd, selStart, bstrText, cchText);
