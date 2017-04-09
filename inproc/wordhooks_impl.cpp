@@ -47,6 +47,7 @@ void WordHooks_PreIDispatchInvoke(IDispatch *This, DISPID dispidMember, REFIID r
 	}
 	if (dispidMember == 0x1fb && wFlags == DISPATCH_METHOD && pDispParams->cArgs == 1 && pDispParams->rgvarg[0].vt == VT_BSTR) // TypeText() on Selection
 	{
+		Beep(440, 100);
 		g_lastEventWasNewParagraph = false;
 		BSTR bstrText = pDispParams->rgvarg[0].bstrVal;
 		LONG cchText = LONG(SysStringLen(bstrText));
