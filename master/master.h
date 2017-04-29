@@ -14,10 +14,12 @@ extern "C"
 typedef void (WINAPI *TTextInsertedCallback)(HWND hwnd, LONG startPosition, LPCWSTR text);
 typedef void (WINAPI *TTextDeletedCallback)(HWND hwnd, LONG startPosition, LPCWSTR text);
 typedef void (WINAPI *TCommandCallback)(LPCSTR command);
+typedef void (WINAPI *TDebugLogCallback)(LPCSTR message);
 
 void WINAPI DBMaster_SetTextInsertedCallback(TTextInsertedCallback callback);
 void WINAPI DBMaster_SetTextDeletedCallback(TTextDeletedCallback callback);
 void WINAPI DBMaster_SetCommandCallback(TCommandCallback callback);
+void WINAPI DBMaster_SetDebugLogCallback(TDebugLogCallback callback);
 BOOL WINAPI DBMaster_Start(void);
 void WINAPI DBMaster_Stop(void);
 

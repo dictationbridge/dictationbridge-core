@@ -26,6 +26,7 @@ static HWND g_hwnd = nullptr;
 static TTextInsertedCallback g_TextInsertedCallback = nullptr;
 static TTextDeletedCallback g_TextDeletedCallback = nullptr;
 static TCommandCallback g_CommandCallback = nullptr;
+static TDebugLogCallback g_DebugLogCallback = nullptr;
 
 static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -34,6 +35,12 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		case WM_COPYDATA:
 		{
 			const COPYDATASTRUCT& cds = *((const COPYDATASTRUCT*) lParam);
+			if (g_DebugLogCallback != nullptr)
+			{
+				char msg[256];
+				sprintf_s(msg, ARRAYSIZE(msg), "WM_COPYDATA: dwData=%d cbData=%d", int(cds.dwData), int(cds.cbData));
+				g_DebugLogCallback(msg);
+			}
 			const BYTE* data = (const BYTE*) (cds.lpData);
 			if (cds.dwData == 0 && g_TextInsertedCallback != nullptr)
 			{
@@ -71,7 +78,7 @@ static LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 				g_CommandCallback(command);
 				delete[] command;
 			}
-			return 0;
+			return 1;
 		}
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -170,6 +177,11 @@ void WINAPI DBMaster_SetTextDeletedCallback(TTextDeletedCallback callback)
 void WINAPI DBMaster_SetCommandCallback(TCommandCallback callback)
 {
 	g_CommandCallback = callback;
+}
+
+void WINAPI DBMaster_SetDebugLogCallback(TDebugLogCallback callback)
+{
+	g_DebugLogCallback = callback;
 }
 
 BOOL WINAPI DBMaster_Start()

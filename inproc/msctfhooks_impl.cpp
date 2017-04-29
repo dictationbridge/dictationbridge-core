@@ -46,6 +46,7 @@ void MSCTFHooks_PostInsertTextAtSelection(ITfInsertAtSelection *This, TfEditCook
 					LONG acpAnchor = -1, cchRange = -1;
 					if (rangeACP->GetExtent(&acpAnchor, &cchRange) == S_OK)
 					{
+						Beep(440, 100);
 						SendTextInsertedEvent(hwnd, acpAnchor, pchText, cchText);
 					}
 					rangeACP->Release();

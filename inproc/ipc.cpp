@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include <stdio.h>
+#include <tchar.h>
 #include <windows.h>
 
 #include "ipc.h"
@@ -35,7 +37,16 @@ void SendTextInsertedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cch
 	cds.lpData = (PVOID) data;
 	cds.cbData = cbData;
 	DWORD_PTR result;
-	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
+	if (SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result) != 0)
+	{
+		Beep(880, 100);
+	}
+	else
+	{
+		TCHAR msg[256];
+		_stprintf_s(msg, ARRAYSIZE(msg), _T("SendMessageTimeout failed: %08x"), int(GetLastError()));
+		MessageBox(nullptr, msg, TEXT("DictationBridge"), MB_OK);
+	}
 	delete[] data;
 }
 
@@ -58,6 +69,6 @@ void SendTextDeletedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchT
 	cds.lpData = (PVOID) data;
 	cds.cbData = cbData;
 	DWORD_PTR result;
-	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_BLOCK, 1000, &result);
+	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result);
 	delete[] data;
 }
