@@ -37,16 +37,7 @@ void SendTextInsertedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cch
 	cds.lpData = (PVOID) data;
 	cds.cbData = cbData;
 	DWORD_PTR result;
-	if (SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result) != 0)
-	{
-		Beep(880, 100);
-	}
-	else
-	{
-		TCHAR msg[256];
-		_stprintf_s(msg, ARRAYSIZE(msg), _T("SendMessageTimeout failed: %08x"), int(GetLastError()));
-		MessageBox(nullptr, msg, TEXT("DictationBridge"), MB_OK);
-	}
+	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result);
 	delete[] data;
 }
 

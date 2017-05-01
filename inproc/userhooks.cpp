@@ -52,7 +52,6 @@ static void BeforeSendMessageFromDragon(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 			delete[] pszText;
 			return;
 		}
-		Beep(440, 100);
 		DWORD selStart = -1;
 		SendMessage(hWnd, EM_GETSEL, (WPARAM) (&selStart), 0);
 		SendTextInsertedEvent(hWnd, selStart, pszText, cchText);
