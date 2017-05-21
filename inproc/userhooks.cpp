@@ -79,7 +79,6 @@ TSendMessageTimeoutW Original_SendMessageTimeoutW = nullptr;
 LRESULT WINAPI Detour_SendMessageTimeoutW(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam, UINT fuFlags, UINT uTimeout, PDWORD_PTR lpdwResult)
 {
 	ThreadIn ti;
-#if 0
 	if (Msg == WM_GETOBJECT && HooksActive())
 	{
 		ApiHookBody hb;
@@ -107,7 +106,7 @@ LRESULT WINAPI Detour_SendMessageTimeoutW(HWND hWnd, UINT Msg, WPARAM wParam, LP
 						{
 							p++;
 						}
-						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						if (_tcsicmp(p, _T("natspeak.exe")) == 0 && Original_SendMessageW(hWnd, LB_GETCOUNT, 0, 0) == 0)
 						{
 							if (lpdwResult != nullptr)
 							{
@@ -120,7 +119,6 @@ LRESULT WINAPI Detour_SendMessageTimeoutW(HWND hWnd, UINT Msg, WPARAM wParam, LP
 			}
 		}
 	}
-#endif
 	return Original_SendMessageTimeoutW(hWnd, Msg, wParam, lParam, fuFlags, uTimeout, lpdwResult);
 }
 
@@ -130,7 +128,6 @@ int WINAPI Detour_GetClassNameW(HWND hWnd, LPWSTR lpClassName, int nMaxCount)
 {
 	ThreadIn ti;
 	int result = Original_GetClassNameW(hWnd, lpClassName, nMaxCount);
-#if 0
 	if (result > 0 && HooksActive())
 	{
 		ApiHookBody hb;
@@ -156,7 +153,7 @@ int WINAPI Detour_GetClassNameW(HWND hWnd, LPWSTR lpClassName, int nMaxCount)
 						{
 							p++;
 						}
-						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						if (_tcsicmp(p, _T("natspeak.exe")) == 0 && SendMessage(hWnd, LB_GETCOUNT, 0, 0) == 0)
 						{
 							LPCWSTR newName = L"CustomListBox";
 							wcsncpy(lpClassName, newName, nMaxCount);
@@ -168,7 +165,6 @@ int WINAPI Detour_GetClassNameW(HWND hWnd, LPWSTR lpClassName, int nMaxCount)
 			}
 		}
 	}
-#endif
 	return result;
 }
 
@@ -178,7 +174,6 @@ UINT WINAPI Detour_RealGetWindowClassW(HWND hWnd, LPWSTR lpClassName, UINT nMaxC
 {
 	ThreadIn ti;
 	UINT result = Original_RealGetWindowClassW(hWnd, lpClassName, nMaxCount);
-#if 0
 	if (result > 0 && HooksActive())
 	{
 		ApiHookBody hb;
@@ -204,7 +199,7 @@ UINT WINAPI Detour_RealGetWindowClassW(HWND hWnd, LPWSTR lpClassName, UINT nMaxC
 						{
 							p++;
 						}
-						if (_tcsicmp(p, _T("natspeak.exe")) == 00)
+						if (_tcsicmp(p, _T("natspeak.exe")) == 0 && SendMessage(hWnd, LB_GETCOUNT, 0, 0) == 0)
 						{
 							LPCWSTR newName = L"CustomListBox";
 							wcsncpy(lpClassName, newName, nMaxCount);
@@ -216,6 +211,5 @@ UINT WINAPI Detour_RealGetWindowClassW(HWND hWnd, LPWSTR lpClassName, UINT nMaxC
 			}
 		}
 	}
-#endif
 	return result;
 }
