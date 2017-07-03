@@ -1,0 +1,110 @@
+NVDA,jaws,speak,shortSpeak,Notes,not exported notes,help
+activateBrowseModeDialog,,browse mode options,,,,
+activateConfigProfilesDialog,,edit profiles,change profiles | open profile manager,,,
+activateInputGesturesDialog,,open input gestures dialog,change NVDA gestures | edit NVDA gestures,,,help
+activateInputCompositionDialog,,open input composition settings,,,,help
+activateSpeechSymbolsDialog,,open punctuation settings,edit punctuation levels,,,help
+activateReviewCursorDialog,,open review cursor settings,,,,help
+activateDocumentFormattingDialog,,open document formatting settings,,,,help
+activateGeneralSettingsDialog,,open general settings,,,,
+activateKeyboardSettingsDialog,,open keyboard settings,,,,
+activateObjectPresentationDialog,,open object presentation settings,,,,
+activateSynthesizerDialog,,open synthesizer settings,,,,
+activateMouseSettingsDialog,,open mouse settings,,,,
+activateVoiceDialog,,open voice settings,,,,
+braille_toggleTether,,change braille tethering,tether to review | tether to focus,,,
+cycleAudioDuckingMode,,toggle speech ducking,,,,
+interactWithMath,,Interact with math,activate math | oh know math,,,
+dateTime,,what is the time,current time,,,
+dateTime,,what is the date,current date,,,
+leftMouseClick,,Left mouse click,Left click | clidk this dumb inaccessible button,,,
+moveMouseToNavigatorObject,,move Mouse to navigator,Mouse to navigator,,,
+moveNavigatorObjectToMouse,,move Navigator to mouse,Navigator to mouse,,,
+moveToParentTreeInterceptor,,"close and browse
+",Exit embedded object | This dialog is annoying me | Exit dialog | leave dialog | leave embedded object | leave application | exit application,"Moves out of an embedded object such as an application, dialog or multimedia content and back to the browse mode document.",,
+navigatorObject_current,,Current navigator,current nav,,,
+navigatorObject_current|2,,spell Current navigator,spell nav,,,help
+navigatorObject_current|3,,Copy current navigator to clipboard,copy nav,,,help
+navigatorObject_currentDimensions,,Where is navigator,Navigator location | nav location,"Announces where the current navigator object is located on screen. It may also announce cursor location in pixels for documents, sheet name and cell coordinates, shape location in PowerPoint and others.",,
+navigatorObject_currentDimensions|2,,Where is navigator in more detail,Navigator detailed location | nav extra location,,,help
+navigatorObject_firstChild,,First child,,,,
+navigatorObject_moveFocus|2,,move caret to review,,,2 is important,help
+navigatorObject_moveFocus,,move Focus to navigator,Focus to navigator,,,
+navigatorObject_next,,Next object,move to Next,,,
+navigatorObject_parent,,Parent object,move to Parent,,,
+navigatorObject_previous,,Previous object,move to Previous,,,
+navigatorObject_toFocus,,Move to focused,Navigator to focus,,,
+previousSynthSetting,,previous synth setting,,,,help
+increaseSynthSetting,,increase synth setting,,,,help
+decreaseSynthSetting,,decrease synth setting,,,,help
+nextSynthSetting,,Next synth setting,,Switches to the next available synth setting in synth settings ring.,,
+passNextKeyThrough,,pass next key through,pass key through | ignore next key,,,
+reloadPlugins,,reload plugins,,,,
+reportAppModuleInfo,,App information,App info | app module info,Announces the executable name of the currently using app and app module if any.,,
+reportCurrentFocus,,speak focus,Focused object,,,
+reportCurrentFocus|2,,spell focus,,,,help
+title,,report title,speak title,,,help
+title|2,,spell title,,,,help
+title|3,,copy title to clipboard,,,,help
+speakForeground ,,read window,speak window | speak foreground,,nvda+b,help
+reportCurrentSelection,,speak selection,Selected text| what text is selected ,,,
+reportStatusLine,,speak status bar,speak status,,,
+reportStatusLine|2,,spell status bar,spell status,,,help
+revertConfiguration,,Revert to saved settings,,,,
+revertConfiguration|3,,reset NVDA to factory defaults,I can't hear you NVDA,,,
+review_activate,,Activate object,Activate me | activate navigator,"Performs the default action for an object such as mouse clicks, pressing a keystroke and so on.",,
+review_bottom,,move review to bottom,Review cursor to end | review cursor to bottom,Moves the review cursor to the end of the text being reviewed.,,
+review_copy,,copy review text,copy review,,,
+review_currentCharacter,,speak review character,speak char,,,
+review_currentCharacter|2,,speak review character phonetically,speak char military,,,help
+review_currentCharacter|3,,speak review character alphpanumerically,speak char code,,,help
+review_currentWord,,speak review word,,,,
+review_currentWord|2,,spell review word,,,,help
+review_currentWord|3,,spell review word phonetically,,,"military alphebet. ""delta india charly tango alpha tango india oscur  would be dictationnovember",help
+review_currentLine,,speak review line,,,,
+review_currentLine|2,,spell review line,,,spells the line,help
+review_currentLine|3,,spell review line phonetically,,,,help
+review_endOfLine,,move review to end,review to end | review to end of line,,,
+review_markStartForCopy,,begin selection,,,,
+review_nextCharacter,,review next character,review next char,,,
+review_nextLine,,review next line,,,,
+review_nextWord,,Review next word,,,,
+review_previousCharacter,,review previous character,prev char,,,
+review_previousWord,,Review previous word,,,,
+review_previousLine,,Review previous line,,,,
+review_sayAll,,say all review,,,,
+review_startOfLine,,move review to beginning,review to home | review to start of line,,,
+review_top,,move review to top,review to top,,,
+reviewMode_next,,Next review mode,,,,
+reviewMode_previous,,previous review mode,,,,
+rightMouseClick,,Right mouse click,Right click,,,
+saveConfiguration,,Save configuration,Save settings,,,
+say_battery_status,,Battery status,is my battery dying,,,
+sayAll,,Say all focus,say all,,,
+showGui,,nvda menu,,,,
+speechMode,,Toggle speech mode,,,,
+toggleCaretMovesReviewCursor,,Toggle review cursor follows caret,,,,
+toggleCurrentAppSleepMode,,navigatorObject_toFocus,sleep mode on | sleep mode off,,,
+toggleFocusMovesNavigatorObject,,Toggle navigator object follows focus,,,,
+toggleInputHelp,,Input help,"turn input help on | turn input help off
+",,,
+toggleLeftMouseButton,,Toggle left mouse button lock,left mouse lock on | left mouse lock off,,,
+toggleMouseTracking,,Toggle mouse tracking,mouse tracking on | mouse tracking off,,,
+toggleProgressBarOutput,,cycle progress bar output,make progress bars beep | make progress bars speak | turn progress bars off,,,
+toggleReportDynamicContentChanges,,Toggle speaking screen content changes,dynamic content changes on | dynamic content changes off,,,
+toggleRightMouseButton,,Toggle right mouse button lock,right mouse lock on | right mouse lock off,,,
+toggleSpeakCommandKeys,,Toggle speaking command keys,speak command keys on | speak command keys off,,,
+toggleSpeakTypedWords,,Toggle speaking typed words,speak typed words on | speak typed words off,,,
+toggleVirtualBufferPassThrough,,Toggle browse mode,browse mode on | browse mode off,,,
+quit,test,quit NVDA,exit NVDA | go away NVDA | ,,,help
+restart,,restart NVDA,stop freezing NVDA,,,help
+reviewRecentMessage:1,,read first skype message,,,Should I include these? I could patch db to support it in about 10 minutes,help
+reviewRecentMessage:2,,read second skype message,,,,help
+reviewRecentMessage:3,,read third skype message,,,,help
+reviewRecentMessage:4,,read fourth skype message,,,,help
+reviewRecentMessage:5,,read fifth skype message,,,,help
+reviewRecentMessage:6,,read sixth skype message,,,,help
+reviewRecentMessage:7,,read seventh skype message,,,,elp
+reviewRecentMessage:8,,read eighth skype message,,,,help
+reviewRecentMessage:9,,read ninth skype message,,,,help
+reviewRecentMessage:0,,read tenth skype message,,,,help
