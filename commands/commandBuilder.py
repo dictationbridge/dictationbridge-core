@@ -16,8 +16,8 @@ except (IOError,):
     exit()
 dragonCommandStr = u"""<?xml version="1.0" encoding="utf-16"?>
 <!DOCTYPE MyCommands SYSTEM "http://www.nuance.com/NaturallySpeaking/Support/MyCommands/MyCmds11.dtd">
-<MyCommands version="2.0" language="0x809">
-    f<Commands type="global">
+<MyCommands version="2.0" language="0x409">
+    <Commands type="global">
 """
 dragonFile = io.open("dragon_dictationBridgeCommands.xml", "w", encoding="utf-16")
 WSRCommandStr = ""

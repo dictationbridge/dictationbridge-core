@@ -2,3 +2,5 @@ build
 bin
 .sconsign.dblite
 *.pyc
+*.xml
+*.wsrmac
