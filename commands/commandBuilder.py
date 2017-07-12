@@ -12,7 +12,7 @@ import io
 reader = None
 def initialize():
 	origDir = os.path.abspath(os.curdir)
-	os.chdir(os.path.join(origDir, "commands"))
+	os.chdir(os.path.dirname(__file__))
 	try:
 		commandsFile = open("commands.csv", "r")
 		reader = csv.DictReader(commandsFile)
