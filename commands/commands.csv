@@ -41,6 +41,9 @@ nextSynthSetting,,Next synth setting,,Switches to the next available synth setti
 passNextKeyThrough,,pass next key through,pass key through | ignore next key,,,
 reloadPlugins,,reload plugins,,,,
 reportAppModuleInfo,,App information,App info | app module info,Announces the executable name of the currently using app and app module if any.,,
+speakLine,,speak line,,,,help
+speakLine|2,,spell line,,,,help
+speakLine|3,,spell line phonetically,,,,help
 reportCurrentFocus,,speak focus,Focused object,,,
 reportCurrentFocus|2,,spell focus,,,,help
 title,,report title,speak title,,,help
@@ -98,13 +101,70 @@ toggleSpeakTypedWords,,Toggle speaking typed words,speak typed words on | speak 
 toggleVirtualBufferPassThrough,,Toggle browse mode,browse mode on | browse mode off,,,
 quit,test,quit NVDA,exit NVDA | go away NVDA | ,,,help
 restart,,restart NVDA,stop freezing NVDA,,,help
-reviewRecentMessage:1,,read first skype message,,,Should I include these? I could patch db to support it in about 10 minutes,help
-reviewRecentMessage:2,,read second skype message,,,,help
-reviewRecentMessage:3,,read third skype message,,,,help
-reviewRecentMessage:4,,read fourth skype message,,,,help
-reviewRecentMessage:5,,read fifth skype message,,,,help
-reviewRecentMessage:6,,read sixth skype message,,,,help
-reviewRecentMessage:7,,read seventh skype message,,,,elp
-reviewRecentMessage:8,,read eighth skype message,,,,help
-reviewRecentMessage:9,,read ninth skype message,,,,help
-reviewRecentMessage:0,,read tenth skype message,,,,help
+nextColumn,,move to next column,next column | next col,,These commands move around in tables.,help
+previousColumn,,move to previous column,previous column | prev col,,,help
+nextRow,,move to next row,next row,,,help
+previousRow,,move to previous row,previous row | prev row,,,help
+nextHeading,,next heading,next head,,,
+previousHeading,,previous heading,prev head,,,
+movePastEndOfContainer,,move past container,move past table | move past list | move past frame,,,
+moveToStartOfContainer,,move to start of container,move to start of table | move to start of list | move to start of frame | start of table | start of list | start of frame | table top | list top,,,
+refreshBuffer,,refresh browse mode,,,,
+activateLongDesc,,get long description,,,,
+toggleScreenLayout,,toggle screen layout,screen layout on | screen layout off,,,
+find,,nvda find,,,,
+findNext,,find next,,,,
+findPrevious,,find previous,find prev,,,
+nextAnnotation,,next annotation,next rev,,,
+previousAnnotation,,previous annotation,prev annotation | prev rev,,,
+nextBlockQuote,,next block quote,,,,
+previousBlockQuote,,previous block quote,prev block quote,,,
+nextButton,,,,,,
+previousButton,,previous buttton,prev button,,,
+nextCheckBox,,next check box,,,,
+previousCheckBox,,previous check box,prev check box,,,
+nextEdit,,next edit field,next edit,,,
+previousEdit,,previous edit field,prev edit field | prev edit,,,
+nextEmbeddedObject,,next embedded object,,,,
+previousEmbeddedObject,,previous embedded object,prev embedded object,,,
+nextError,,next error,,,,
+previousError,,previous error,,,,
+nextFormField,,next form field,next field,,,
+previousFormField,,previous form field,prev form field | prev field | previous form field,,,
+nextFrame,,next frame,,,,
+previousFrame,,previous frame,prev frame,,,
+nextGraphic,,next graphic | next picture,next image,,,
+previousGraphic,,previous graphic,previous image | previous picture | prev graphic | prev image | prev picture,,,
+nextHeading1,,next heading 1,next 1,,,
+previousHeading1,,previous heading 1,prev heading 1 | prev 1 | previous 1,,,
+nextHeading2,,next heading 2,next 2,,,
+previousHeading2,,previous heading 2,prev heading 2 | prev 2 | previous 2,,,
+nextHeading3,,next heading 3,next 3,,,
+previousHeading3,,previous heading 3,prev heading 3 | prev 3 | previous 3,,,
+nextHeading4,,next heading 4,next 4,,,
+previousHeading4,,previous heading 4,prev heading 4 | prev 4 | previous 4,,,
+nextHeading5,,next heading 5,next 5,,,
+previousHeading5,,previous heading 5,prev heading 5 | prev 5 | previous 5,,,
+nextHeading6,,next heading 6,next 6,,,
+previousHeading6,,previous heading 6,prev heading 6 | prev 6 | previous 6,,,
+nextLandmark,,next landmark,,,,
+previousLandmark,,previous landmark,prev landmark,,,
+nextLink,,next link,,,,
+previousLink,,previous link,prev link,,,
+nextList,,next list,,,,
+previousList,,previous list,prev list,,,
+nextListItem,,next listItem,,,,
+previousListItem,,previous listItem,prev listItem,,,
+nextRadioButton,,next radio button,next radio,,,
+previousRadioButton,,previous radio button,prev radio button | previous radio | prev radio,,,
+nextSeparator,,next seperator,,,,
+previousSeparator,,previous seperator,prev seperator,,,
+nextTable,,next table,,,,
+previousTable,,previous table,prev table,,,
+nextUnvisitedLink,,next unvisited link,next unvisited,,,
+previousUnvisitedLink,,previous unvisited link,previous unvisited | prev unvisited | prev unvisited link,,,
+nextvisitedLink,,next visited link,next visited,,,
+previousvisitedLink,,previous visited link,previous visited | prev visited | prev visited link,,,
+nextNotLinkBlock,,skip these links,move past these links,,,
+previousNotLinkBlock,,move before these links,,,,
+elementsList,,show elements list,elementsList,,,
