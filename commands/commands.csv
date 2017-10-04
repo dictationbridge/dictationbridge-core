@@ -41,9 +41,9 @@ nextSynthSetting,,Next synth setting,,Switches to the next available synth setti
 passNextKeyThrough,,pass next key through,pass key through | ignore next key,,,
 reloadPlugins,,reload plugins,,,,
 reportAppModuleInfo,,App information,App info | app module info,Announces the executable name of the currently using app and app module if any.,,
-speakLine,,speak line,,,,help
-speakLine|2,,spell line,,,,help
-speakLine|3,,spell line phonetically,,,,help
+reportCurrentLine,,speak line,,,,help
+reportCurrentLine|2,,spell line,,,,help
+reportCurrentLine|3,,spell line phonetically,,,,help
 reportCurrentFocus,,speak focus,Focused object,,,
 reportCurrentFocus|2,,spell focus,,,,help
 title,,report title,speak title,,,help
