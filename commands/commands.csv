@@ -16,7 +16,7 @@ braille_toggleTether,,change braille tethering,tether to review | tether to focu
 cycleAudioDuckingMode,,toggle speech ducking,,,,
 interactWithMath,,Interact with math,activate math | oh know math,,,
 dateTime,,what is the time,current time,,,
-dateTime,,what is the date,current date,,,
+dateTime|2,,what is the date,current date,,,
 leftMouseClick,,Left mouse click,Left click | clidk this dumb inaccessible button,,,
 moveMouseToNavigatorObject,,move Mouse to navigator,Mouse to navigator,,,
 moveNavigatorObjectToMouse,,move Navigator to mouse,Navigator to mouse,,,
@@ -41,7 +41,7 @@ nextSynthSetting,,Next synth setting,,Switches to the next available synth setti
 passNextKeyThrough,,pass next key through,pass key through | ignore next key,,,
 reloadPlugins,,reload plugins,,,,
 reportAppModuleInfo,,App information,App info | app module info,Announces the executable name of the currently using app and app module if any.,,
-reportCurrentLine,speak line,,,,help
+speakLine,,speak line,,,,help
 speakLine|2,,spell line,,,,help
 speakLine|3,,spell line phonetically,,,,help
 reportCurrentFocus,,speak focus,Focused object,,,
