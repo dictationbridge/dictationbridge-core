@@ -168,3 +168,5 @@ previousvisitedLink,,previous visited link,previous visited | prev visited | pre
 nextNotLinkBlock,,skip these links,move past these links,,,
 previousNotLinkBlock,,move before these links,,,,
 elementsList,,show elements list,elementsList,,,
+stopTalking,,Stop Talking,,,,
+toggleTalking,,Toggle talking,Pause speech | resume speech | pause speaking | resume speaking,,,
