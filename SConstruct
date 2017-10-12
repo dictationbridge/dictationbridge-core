@@ -23,6 +23,7 @@ binDir = Dir('bin')
 Export('binDir')
 
 outCommandFiles = [env.File(i) for i in [
+	os.path.join("commands", "NVDA_helpCommands.py"),
 	os.path.join("commands", "dragon_dictationBridgeCommands.xml"),
 	os.path.join("commands", "dictationBridge.WSRMac"),
 ]]

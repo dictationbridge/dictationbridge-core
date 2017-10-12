@@ -4,8 +4,8 @@ Command support for building dragon XML.
 from . import genericCommand
 
 
-opener = '        <Command name="{name}" group="{group}" enabled="true" states="">\n'
-command = r"""<description>{helpText}</description>
+commandTemplate = """        <Command name="{name}" group="{group}" enabled="true" states="">\n
+<description>{helpText}</description>
             <contents type="SCRIPT">
         <![CDATA[
         Sub Main
@@ -13,22 +13,30 @@ command = r"""<description>{helpText}</description>
         End Sub
         ]]>
             </contents>
+        </Command>
 """
-CLOSER = "        </Command>\n"
-
 
 class DragonCommand(genericCommand.Command):
     """Command for building Dragon XML"""
+    needsIO = True
 
     def open(self):
-        return opener.format(name=self.command, group=self.group)
+        return u"""<?xml version="1.0" encoding="utf-16"?>
+	<!DOCTYPE MyCommands SYSTEM "http://www.nuance.com/NaturallySpeaking/Support/MyCommands/MyCmds11.dtd">
+	<MyCommands version="2.0" language="0x409">
+		<Commands type="global">
+	"""
 
-    def commandMeat(self):
-        return command.format(
-            helpText=self.helpText,
-            identifier_for_jaws=self.identifier_for_jaws,
-            identifier_for_NVDA=self.identifier_for_NVDA,
+    def addCommand(self, command, identifier_for_jaws, identifier_for_NVDA, group, helpText):
+        self.commandStr += commandTemplate.format(
+            name = command,
+            helpText=helpText,
+            identifier_for_NVDA=identifier_for_NVDA,
+            group = group
         )
 
-    def close(self):
-        return CLOSER
+    def finish(self):
+        return """
+        </Commands>
+    </MyCommands>
+        """

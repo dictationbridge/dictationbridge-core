@@ -5,8 +5,7 @@ import os
 CommandBuilder builds commands for Dragon and WSR.
 """
 
-from commands.dragonCommand import DragonCommand
-from commands.wsrCommand import WSRCommand
+from commands.commandFactory import CommandFactory
 import csv
 import io
 reader = None
@@ -14,45 +13,29 @@ def initialize():
 	origDir = os.path.abspath(os.curdir)
 	os.chdir(os.path.dirname(__file__))
 	try:
-		commandsFile = open("commands.csv", "r")
-		reader = csv.DictReader(commandsFile)
+		commandFile = open("commands.csv")
+		reader = csv.DictReader(commandFile)
 	except (IOError,):
 		print("Cannot read csv file")
 		exit()
-	dragonCommandStr = u"""<?xml version="1.0" encoding="utf-16"?>
-	<!DOCTYPE MyCommands SYSTEM "http://www.nuance.com/NaturallySpeaking/Support/MyCommands/MyCmds11.dtd">
-	<MyCommands version="2.0" language="0x409">
-		<Commands type="global">
-	"""
-	dragonFile = io.open("dragon_dictationBridgeCommands.xml", "w", encoding="utf-16")
-	WSRCommandStr = ""
-	WSRFile = open("dictationBridge.WSRMac", "w")
-	WSRFile.write("""<?xml version="1.0" encoding="UTF-8"?>
-	<speechMacros>
-	""")
+	commandFactorie = CommandFactory()
 	for row in reader:
 		commands = [row["speak"]] + row["shortSpeak"].split("|")
 		#There are empty commands potentially if the alternates is empty, hence the if.
 		#We want to strip accidental whitespace from around the command.
 		commands = [command.strip() for command in commands if command]
+		group = row.get("group", "").strip()
+		if group:
+			group = "Dictation Bridge/" + group
+		else:
+			group = "Dictation Bridge"
 		for command in commands:
-			dragonCommand = DragonCommand(command)
-			wsrCommand = WSRCommand(command)
-			wsrCommand.helpText = dragonCommand.helpText = row["Notes"]
-			if row["NVDA"]:
-				wsrCommand.identifier_for_NVDA = dragonCommand.identifier_for_NVDA = row["NVDA"].strip()
-			if row["jaws"]:
-				wsrCommand.identifier_for_jaws = dragonCommand.identifier_for_jaws = row["jaws"].strip()
-			dragonCommandStr += dragonCommand.makeCommand()
-			WSRCommandStr += wsrCommand.makeCommand()
-
-	WSRFile.write(WSRCommandStr)
-	WSRFile.write("</speechMacros>")
-	WSRFile.close()
-	dragonCommandStr+="""
-		</Commands>
-	</MyCommands>
-	"""
-	dragonFile.write(dragonCommandStr)
-	dragonFile.close()
+			commandFactorie.addCommand(command,
+				row.get("jaws", "").strip(),
+				row.get("NVDA", "").strip(), 
+				group,
+				row.get("Notes", "").strip())
+	commandFactorie.close()
+	commandFile.close()
 	os.chdir(origDir)
+
