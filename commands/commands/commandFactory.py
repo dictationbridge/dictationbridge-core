@@ -1,9 +1,10 @@
-from . import dragonCommand,wsrCommand,genericCommand,pythonCommand
+from . import NVDADragonCommand, jawsDragonCommand, wsrCommand,genericCommand,pythonCommand
 
 class CommandFactory(object):
     def __init__(self):
         self.commands = [
-            dragonCommand.DragonCommand("dragon_dictationBridgeCommands.xml"),
+            NVDADragonCommand.DragonCommand("dragon_dictationBridgeCommands.xml"),
+            jawsDragonCommand.DragonCommand("jfw_dragon_dictationBridgeCommands.xml"),
             pythonCommand.PythonCommand("NVDA_helpCommands.py"),
             wsrCommand.WSRCommand("dictationBridge.WSRMac"),
         ]
