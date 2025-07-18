@@ -29,7 +29,7 @@ class DragonCommand(genericCommand.Command):
 	"""
 
     def addCommand(self, command, identifier_for_jaws, identifier_for_NVDA, group, helpText):
-        print identifier_for_jaws
+        print(identifier_for_jaws)
         if not identifier_for_jaws:
             return
         self.commandStr += commandTemplate.format(

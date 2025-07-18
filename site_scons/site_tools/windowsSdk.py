@@ -13,7 +13,10 @@
 ###
 
 import subprocess
-import _winreg
+try:
+    import winreg
+except ImportError:
+    import _winreg as winreg
 import os
 from SCons.Tool.MSCommon import common
 from SCons.Tool import msvc
@@ -35,14 +38,14 @@ def fetchSDKVars(targetArch,versionString):
 	if not archSwitch:
 		common.debug("windowsSdk.py, fetchSDKVars: Unsupported target arch: %s"%targetArch)
 	try:
-		versionKey=_winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Microsoft SDKs\Windows\%s'%versionString)
+		versionKey=winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,r'SOFTWARE\Microsoft\Microsoft SDKs\Windows\%s'%versionString)
 	except Exception as e:
 		common.debug("windowsSdk.py, fetchSDKVars: failed to open registry key for version %s: %s"%(versionString,e))
 		return
 	try:
-		installDir=_winreg.QueryValueEx(versionKey,"InstallationFolder")[0]
+		installDir=winreg.QueryValueEx(versionKey,"InstallationFolder")[0]
 	except Exception as e:
-		common.debug("windowsSdk.py, fetchSDKVars: no InstallationFolder value in registry key: %s: %s"%(v,e))
+		common.debug("windowsSdk.py, fetchSDKVars: no InstallationFolder value in registry key: %s: %s"%(versionString,e))
 		return
 	if versionString=='v7.1A':
 		#V7.1A (comes with vc2012) does not come with a batch file 
@@ -55,7 +58,7 @@ def fetchSDKVars(targetArch,versionString):
 	if not os.path.isfile(scriptPath):
 		common.debug("windowsSdk.py, fetchSDKVars: Script %s does not exist"%scriptPath)
 		return
-	p=subprocess.Popen(['cmd','/V','/c',scriptPath,archSwitch,'&&','set'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+	p=subprocess.Popen(['cmd','/V','/c',scriptPath,archSwitch or '','&&','set'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 	stdout,stderr=p.communicate()
 	try:
 		return common.parse_output(stdout)
@@ -69,20 +72,21 @@ def exists(env):
 
 def generate(env):
 	targetArch=env.get('TARGET_ARCH','x86')
-	d=fetchSDKVars(targetArch,'v7.1A')
+	d=fetchSDKVars(targetArch,'v10.0')
+	if not d:
+		d=fetchSDKVars(targetArch,'v7.1A')
 	if d:
 		env.Append(CPPDEFINES='_USING_V110_SDK71_')
 		env.Append(CCFLAGS='/wd4091') 
 		if targetArch.endswith('64'):
 			env.Append(LINKFLAGS=[env['LINKFLAGS'],'/SUBSYSTEM:WINDOWS,5.02'])
 		else:
-			# #3730: VC2012 uses SSE2 by default, but NVDA is still run on some older processers (AMD Athlon etc) which don't support this.
 			env.Append(CCFLAGS='/arch:IA32')
 			env.Append(LINKFLAGS=[env['LINKFLAGS'],'/SUBSYSTEM:WINDOWS,5.01'])
 	if not d:
 		common.debug("windowsSdk.py, Generate: No suitable SDK could be used")
-		raise RuntimeError("Windows SDK 7.1A could not be found")
+		raise RuntimeError("Windows SDK (10.0 or 7.1A) could not be found")
 	#msvc.generate(env)
-	for k, v in d.iteritems():
+	for k, v in d.items():
 		env.PrependENVPath(k,v,delete_existing=True)
 

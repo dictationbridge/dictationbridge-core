@@ -6,7 +6,7 @@ Support for Dragon NaturallySpeaking is still under heavy development.
 
 ## Building
 
-To build the core, you need Python 2.7, a recent version of SCons, and Visual Studio 2015.
+To build the core, you need Python 3.7+, a recent version of SCons, and Visual Studio 2017 or later.
 
 First, fetch Git submodules with this command:
 
