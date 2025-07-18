@@ -26,7 +26,21 @@ void SendTextInsertedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cch
 		return;
 	}
 	DWORD cbData = (sizeof(DWORD) * 2) + (cchText * sizeof(WCHAR));
-	BYTE* data = new BYTE[cbData];
+	
+	const DWORD STACK_BUFFER_SIZE = 1024;
+	BYTE stackBuffer[STACK_BUFFER_SIZE];
+	BYTE* data;
+	bool useHeap = cbData > STACK_BUFFER_SIZE;
+	
+	if (useHeap)
+	{
+		data = new BYTE[cbData];
+	}
+	else
+	{
+		data = stackBuffer;
+	}
+	
 	DWORD tmp = (DWORD)((__int64)hwnd & 0xffffffff);
 	memcpy(data, &tmp, sizeof(tmp));
 	tmp = (DWORD)startPosition;
@@ -38,7 +52,11 @@ void SendTextInsertedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cch
 	cds.cbData = cbData;
 	DWORD_PTR result;
 	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result);
-	delete[] data;
+	
+	if (useHeap)
+	{
+		delete[] data;
+	}
 }
 
 void SendTextDeletedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchText)
@@ -49,7 +67,21 @@ void SendTextDeletedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchT
 		return;
 	}
 	DWORD cbData = (sizeof(DWORD) * 2) + (cchText * sizeof(WCHAR));
-	BYTE* data = new BYTE[cbData];
+	
+	const DWORD STACK_BUFFER_SIZE = 1024;
+	BYTE stackBuffer[STACK_BUFFER_SIZE];
+	BYTE* data;
+	bool useHeap = cbData > STACK_BUFFER_SIZE;
+	
+	if (useHeap)
+	{
+		data = new BYTE[cbData];
+	}
+	else
+	{
+		data = stackBuffer;
+	}
+	
 	DWORD tmp = (DWORD)((__int64)hwnd & 0xffffffff);
 	memcpy(data, &tmp, sizeof(tmp));
 	tmp = (DWORD)startPosition;
@@ -61,5 +93,9 @@ void SendTextDeletedEvent(HWND hwnd, LONG startPosition, LPCWSTR text, LONG cchT
 	cds.cbData = cbData;
 	DWORD_PTR result;
 	SendMessageTimeout(hwndMaster, WM_COPYDATA, 0, (LPARAM) &cds, SMTO_NORMAL, 1000, &result);
-	delete[] data;
+	
+	if (useHeap)
+	{
+		delete[] data;
+	}
 }
