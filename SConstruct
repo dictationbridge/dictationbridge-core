@@ -1,9 +1,12 @@
-# Based on the main NVDA SCons script
+		# Based on the main NVDA SCons script
 
 import sys
 import os
 import time
-import _winreg
+try:
+    import winreg
+except ImportError:
+    import _winreg as winreg
 from glob import glob
 import commands.commandBuilder
 

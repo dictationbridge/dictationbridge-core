@@ -8,9 +8,10 @@ Import(
 	'binDir',
 )
 
-# We only support compiling with MSVC 14 (2015)
-if not env.get('MSVC_VERSION','').startswith('14.'):
-	raise RuntimeError("Microsoft Visual C++ 14 not found")
+# We support compiling with MSVC 14 (2015) or later
+msvc_version = env.get('MSVC_VERSION', '')
+if not (msvc_version.startswith('14.') or msvc_version.startswith('19.')):
+	raise RuntimeError("Microsoft Visual C++ 14 (2015) or later not found")
 
 
 TARGET_ARCH=env['TARGET_ARCH']
